@@ -44,8 +44,21 @@ cut -d'/' -f1,2,3 EntryPoints.txt | tee EntryPoints_Protocol.txt
 # 留下 Hostname 與 Path
 cut -d'/' -f3- EntryPoints.txt | tee EntryPoints_Path.txt
 # 留下 Hostname，但把 Port 拿掉 (如果有 Port 的話)
-cut -d'/' -f3,3 EntryPoints.txt | cut -d':' -f1 | EntryPoints_Host_NoPort.txt
+cut -d'/' -f3,3 EntryPoints.txt | cut -d':' -f1 | tee EntryPoints_Host_NoPort.txt
 ```
+
+## Parse the result of gobuster.sh
+
+只留下 URL
+```
+cat ./AutoCommand/gobuster/result.txt | awk '{print $2}' | tee ./AutoCommand/gobuster/url.txt
+```
+
+砍掉 Response 302, 404 的 URL
+```
+cat ./AutoCommand/gobuster/result.txt | awk -F, '!/(Status: 302)/' | awk -F, '!/(Status: 404)/' | awk '{print $2}' | tee ./AutoCommand/gobuster/available_url.txt
+```
+
 
 ## gobuster.sh
 
